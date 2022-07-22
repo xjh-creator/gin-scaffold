@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"gin-scaffold/internal/component_name"
+	"gin-scaffold/internal/component_name/mysql"
 	"gin-scaffold/internal/pkg/setting"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -34,10 +35,10 @@ func init() {
 	//if err != nil {
 	//	log.Fatalf("init.setupLogger err: %v", err)
 	//}
-	//err = setupDBEngine()
-	//if err != nil {
-	//	log.Fatalf("init.setupDBEngine err: %v", err)
-	//}
+	err = setupDBEngine()
+	if err != nil {
+		log.Fatalf("init.setupDBEngine err: %v", err)
+	}
 	//err = setupValidator()
 	//if err != nil {
 	//	log.Fatalf("init.setupValidator err: %v", err)
@@ -145,15 +146,15 @@ func setupSetting() error {
 //	return nil
 //}
 
-//func setupDBEngine() error {
-//	var err error
-//	component_name.DBEngine, err = model.NewDBEngine(global.DatabaseSetting)
-//	if err != nil {
-//		return err
-//	}
-//
-//	return nil
-//}
+func setupDBEngine() error {
+	var err error
+	component_name.DBEngine, err = mysql.NewDBEngine(component_name.DatabaseSetting)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
 
 //func setupValidator() error {
 //	component_name.Validator = validator.NewCustomValidator()

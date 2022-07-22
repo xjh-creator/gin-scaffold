@@ -33,10 +33,10 @@ JWT:
 Database: #数据库配置
   DBType: mysql
   UserName: root
-  Password: rootroot
+  Password: 123456
   Host: 127.0.0.1:3306
-  DBName: blog_service
-  TablePrefix: blog_
+  DBName:
+  TablePrefix:
   Charset: utf8
   ParseTime: True
   MaxIdleConns: 10
