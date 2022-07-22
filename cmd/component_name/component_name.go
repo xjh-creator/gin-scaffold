@@ -5,12 +5,15 @@ import (
 	"flag"
 	"gin-scaffold/internal/component_name"
 	"gin-scaffold/internal/component_name/mysql"
+	"gin-scaffold/internal/pkg/logger"
 	"gin-scaffold/internal/pkg/setting"
 	"github.com/gin-gonic/gin"
+	"gopkg.in/natefinch/lumberjack.v2"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 )
@@ -83,7 +86,7 @@ func main() {
 func setupFlag() error {
 	flag.StringVar(&port, "port", "", "启动端口")
 	flag.StringVar(&runMode, "mode", "", "启动模式")
-	flag.StringVar(&config, "config", "configs/", "指定要使用的配置文件路径")
+	flag.StringVar(&config, "config", "../../configs/", "指定要使用的配置文件路径")
 	flag.BoolVar(&isVersion, "version", false, "编译信息")
 	flag.Parse()
 
@@ -91,11 +94,7 @@ func setupFlag() error {
 }
 
 func setupSetting() error {
-	//s, err := setting.NewSetting(strings.Split(config, ",")...)
-	//if err != nil {
-	//	return err
-	//}
-	s, err := setting.NewSetting()
+	s, err := setting.NewSetting(strings.Split(config, ",")...)
 	if err != nil {
 		return err
 	}
@@ -134,17 +133,17 @@ func setupSetting() error {
 	return nil
 }
 
-//func setupLogger() error {
-//	fileName := component_name.AppSetting.LogSavePath + "/" + component_name.AppSetting.LogFileName + component_name.AppSetting.LogFileExt
-//	component_name.Logger = component_name.NewLogger(&lumberjack.Logger{
-//		Filename:  fileName,
-//		MaxSize:   500,
-//		MaxAge:    10,
-//		LocalTime: true,
-//	}, "", log.LstdFlags).WithCaller(2)
-//
-//	return nil
-//}
+func setupLogger() error {
+	fileName := component_name.AppSetting.LogSavePath + "/" + component_name.AppSetting.LogFileName + component_name.AppSetting.LogFileExt
+	component_name.Logger = logger.NewLogger(&lumberjack.Logger{
+		Filename:  fileName,
+		MaxSize:   500,
+		MaxAge:    10,
+		LocalTime: true,
+	}, "", log.LstdFlags).WithCaller(2)
+
+	return nil
+}
 
 func setupDBEngine() error {
 	var err error
